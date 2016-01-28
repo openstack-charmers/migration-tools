@@ -4,7 +4,7 @@ set -e
 
 charm="$1"
 branch="$2"
-base="$(basename $0)/.."
+base="`pwd`/.."
 
 if [ -z "$charm" ] || [ -z "$branch" ]; then
     echo "Usage: charm-git-import charm-name branch"
