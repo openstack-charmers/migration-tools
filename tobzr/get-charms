@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+charms=$(cat ../charms.txt)
+
+mkdir -p bzr
+
+for charm in $charms; do
+  if [ -d github/charm-$charm ]; then
+    (cd github/charm-$charm; git pull)
+  else
+    git clone https://github.com/openstack-charmers/charm-$charm github/charm-$charm
+  fi
+done

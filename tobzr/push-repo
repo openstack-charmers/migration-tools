@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+for charm in `ls -1 bzr/stable/`; do
+    echo "Pushing $charm stable charm"
+    if [ -d bzr/stable/$charm ]; then
+        (
+            cd bzr/stable/$charm
+            bzr push --overwrite
+        )
+    fi
+done
+for charm in `ls -1 bzr/next/`; do
+    echo "Pushing $charm next charm"
+    if [ -d bzr/next/$charm ]; then
+        (
+            cd bzr/next/$charm
+            bzr push --overwrite
+        )
+    fi
+done

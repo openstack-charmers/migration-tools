@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -ex
+
+bzr_dir="$1"
+git_dir="$2"
+
+if [ -z "$bzr_dir" ] || [ -z "$git_dir" ]; then
+    echo "Usage: charm-bzr-import bzr-dir git-dir"
+    exit 1
+fi
+
+root_dir=`pwd`
+charm=$(basename $bzr_dir)
+
+# Determine if stable or next charm
+if [[ "$bzr_dir" == *"/stable/$charm" ]]; then
+    stable=true
+else
+    stable=false
+fi
+
+echo "Initializing bzr branch"
+mkdir -p $bzr_dir
+cd $bzr_dir
+bzr init
+
+echo "Exporting git repo to bzr branch"
+tmp_dir=$root_dir/tmp
+mkdir -p $tmp_dir
+export_file="$tmp_dir/${charm}.fi"
+cd $root_dir/$git_dir
+if [ "$stable" = true ]; then
+    git fast-export remotes/origin/stable > $export_file
+else
+    git fast-export master > $export_file
+fi
+bzr fast-import $export_file $bzr_dir
+
+# Propogate repo
+if [ "$stable" = true ]; then
+    bzr push --overwrite --directory $bzr_dir lp:~openstack-charm-sync/charms/trusty/$charm/stable
+else
+    bzr push --overwrite --directory $bzr_dir lp:~openstack-charm-sync/charms/trusty/$charm/next
+fi
