@@ -38,7 +38,7 @@ git commit -am "Adapt imports and metadata for github move"
 git gc --aggressive --prune=now
 
 # Propogate repo
-git remote add origin git@github.com:openstack-charmers/$charm.git
+git remote add origin git@github.com:openstack-charmers/$(basename $charm).git
 git checkout -b stable 15.10 || :
 
 # Current github user needs push rights
