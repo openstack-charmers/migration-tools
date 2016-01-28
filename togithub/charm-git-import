@@ -4,6 +4,7 @@ set -e
 
 charm="$1"
 branch="$2"
+base="$(basename $0)/.."
 
 if [ -z "$charm" ] || [ -z "$branch" ]; then
     echo "Usage: charm-git-import charm-name branch"
@@ -39,7 +40,7 @@ git gc --aggressive --prune=now
 
 # Propogate repo
 git remote add origin git@github.com:openstack-charmers/$(basename $charm).git
-git checkout -b stable $(cat ../stable.txt) || :
+git checkout -b stable $(cat ${base}/stable.txt) || :
 
 # Current github user needs push rights
 # git push --force -u origin master
