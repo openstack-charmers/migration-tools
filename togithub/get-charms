@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+charms="openstack-dashboard cinder neutron-api neutron-gateway neutron-openvswitch keystone glance nova-cloud-controller nova-compute ceilometer heat ceilometer-agent swift-proxy swift-storage ceph ceph-osd ceph-radosgw cinder-ceph odl-controller neutron-api-odl openvswitch-odl"
+
+mkdir -p bzr
+
+for charm in $charms; do
+  if [ -d bzr/$charm ]; then
+    (cd bzr/$charm; bzr pull)
+  else
+    bzr branch lp:~openstack-charmers/charms/trusty/$charm/next bzr/$charm
+  fi
+done

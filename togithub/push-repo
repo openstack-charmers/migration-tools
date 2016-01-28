@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+for charm in `ls -1 github/`; do
+    echo "$charm"
+    if [ -d github/$charm ]; then
+        (
+            cd github/$charm
+            git push --all --force origin
+            git push --tags origin
+        )
+    fi
+done
