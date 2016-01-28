@@ -39,7 +39,7 @@ git gc --aggressive --prune=now
 
 # Propogate repo
 git remote add origin git@github.com:openstack-charmers/$(basename $charm).git
-git checkout -b stable 15.10 || :
+git checkout -b stable $(cat ../stable.txt) || :
 
 # Current github user needs push rights
 # git push --force -u origin master
