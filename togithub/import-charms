@@ -2,8 +2,7 @@
 
 set -e
 
-charms="openstack-dashboard cinder neutron-api neutron-gateway neutron-openvswitch keystone glance nova-cloud-controller nova-compute ceilometer heat ceilometer-agent swift-proxy swift-storage ceph ceph-osd ceph-radosgw cinder-ceph odl-controller neutron-api-odl openvswitch-odl"
-
+charms=$(cat ../charms.txt)
 mkdir -p github
 
 for charm in $charms; do
