@@ -2,9 +2,15 @@
 
 set -e
 
-charms=$(cat ../charms.txt)
+charms=$(grep -v '#' ../charms.txt)
+blacklist=$(grep -v '#' blacklist.txt || :)
+
 mkdir -p github
 
 for charm in $charms; do
+  if [[ $blacklist == *$charm* ]]; then
+    echo " ! Skipping blacklisted:  $charm"
+    continue
+  fi
    [ -d github/charm-$charm ] || ./charm-git-import github/charm-${charm} `pwd`/bzr/$charm
 done

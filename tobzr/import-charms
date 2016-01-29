@@ -2,11 +2,17 @@
 
 set -e
 
-charms=$(cat ../charms.txt)
+charms=$(grep -v '#' ../charms.txt)
+blacklist=$(grep -v '#' blacklist.txt || :)
+
 rm -rf bzr
 mkdir -p bzr/{next,stable}
 
 for charm in $charms; do
+  if [[ $blacklist == *$charm* ]]; then
+    echo " ! Skipping blacklisted:  $charm"
+    continue
+  fi
     for branch in next stable; do
         ./charm-bzr-import `pwd`/bzr/$branch/$charm github/charm-$charm
     done

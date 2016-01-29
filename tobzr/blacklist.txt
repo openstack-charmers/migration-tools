@@ -1,0 +1,2 @@
+#https://bugs.launchpad.net/bzr-fastimport/+bug/514560
+swift-proxy

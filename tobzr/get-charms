@@ -2,11 +2,16 @@
 
 set -e
 
-charms=$(cat ../charms.txt)
+charms=$(grep -v '#' ../charms.txt)
+blacklist=$(grep -v '#' blacklist.txt || :)
 
 mkdir -p bzr
 
 for charm in $charms; do
+  if [[ $blacklist == *$charm* ]]; then
+    echo " ! Skipping blacklisted:  $charm"
+    continue
+  fi
   if [ -d github/charm-$charm ]; then
     (cd github/charm-$charm; git pull)
   else
