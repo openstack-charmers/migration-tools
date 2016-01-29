@@ -28,8 +28,11 @@ git filter-branch --commit-filter '
     fi
     git commit-tree "$@"' HEAD
 
-# Rename the ignore file to where git expects
-git mv .bzrignore .gitignore || :
+# bzr and git, ignore one another's ignores.
+cp -fvp .bzrignore .gitignore || :
+echo ".bzrignore" >> .gitignore
+echo ".gitignore" >> .bzrignore
+git add .bzrignore .gitignore || :
 
 # Default rule in bzr missing in git for editor swap files
 echo "*.sw[nop]" >> .gitignore
