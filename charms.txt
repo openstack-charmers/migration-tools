@@ -2,6 +2,7 @@ ceilometer
 ceilometer-agent
 ceph
 ceph-osd
+ceph-mon
 ceph-radosgw
 cinder
 cinder-backup
