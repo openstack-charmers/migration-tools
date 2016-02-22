@@ -10,6 +10,7 @@ cinder-ceph
 glance
 heat
 keystone
+lxd
 neutron-api
 neutron-api-odl
 neutron-gateway
@@ -19,6 +20,7 @@ nova-compute
 odl-controller
 openstack-dashboard
 openvswitch-odl
+percona-cluster
 rabbitmq-server
 swift-proxy
 swift-storage
