@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
 
-set -ex
+echo "===== $(basename $0) ====="
 
 bzr_dir="$1"
 git_dir="$2"
@@ -20,26 +20,37 @@ else
     stable=false
 fi
 
-echo "Initializing bzr branch"
+echo " . Exporting $git_dir (stable: $stable)"
+tmp_dir=$root_dir/tmp
+mkdir -p $tmp_dir
+cd $root_dir/$git_dir
+
+branches_all="$(git branch -a)"
+stable_remote="remotes/origin/stable"
+export_file="$tmp_dir/${charm}.fi"
+
+if [ "$stable" == true ] && [[ "$branches_all" == *"$stable_remote"* ]]; then
+    git fast-export remotes/origin/stable > $export_file
+elif [ "$stable" == true ] && [[ "$branches_all" != *"$stable_remote"* ]]; then
+    echo " ! Skipping $git_dir (No $stable_remote)"
+    exit 0
+else
+    git fast-export master > $export_file
+fi
+
+echo " . Initializing bzr repo $bzr_dir"
 mkdir -p $bzr_dir
 cd $bzr_dir
 bzr init
 
-echo "Exporting git repo to bzr branch"
-tmp_dir=$root_dir/tmp
-mkdir -p $tmp_dir
-export_file="$tmp_dir/${charm}.fi"
-cd $root_dir/$git_dir
-if [ "$stable" = true ]; then
-    git fast-export remotes/origin/stable > $export_file
-else
-    git fast-export master > $export_file
-fi
+echo " . Importing to $bzr_dir (stable: $stable)"
 bzr fast-import $export_file $bzr_dir
 
-# Propogate repo
-if [ "$stable" = true ]; then
-    bzr push --overwrite --directory $bzr_dir lp:~openstack-charm-sync/charms/trusty/$charm/stable
+echo " + Setting bzr repo parent location"
+cd $bzr_dir
+if [ "$stable" == "true" ]; then
+    bzr config parent_location="bzr+ssh://bazaar.launchpad.net/~openstack-charm-sync/charms/trusty/$charm/stable"
 else
-    bzr push --overwrite --directory $bzr_dir lp:~openstack-charm-sync/charms/trusty/$charm/next
+    bzr config parent_location="bzr+ssh://bazaar.launchpad.net/~openstack-charm-sync/charms/trusty/$charm/next"
 fi
+bzr config parent_location

@@ -28,3 +28,8 @@ sudo apt-get install python-fastimport
 ```
 ./push-charms
 ```
+
+## Or, just do it all
+```
+./tobzr.sh
+```

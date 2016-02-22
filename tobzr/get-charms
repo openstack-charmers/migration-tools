@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
 
-set -e
+echo "===== $(basename $0) ====="
 
 charms=$(grep -v '#' ../charms.txt)
 blacklist=$(grep -v '#' blacklist.txt || :)
@@ -13,8 +13,10 @@ for charm in $charms; do
     continue
   fi
   if [ -d github/charm-$charm ]; then
+    echo " . Pulling from git:  $charm"
     (cd github/charm-$charm; git pull)
   else
+    echo " . Cloning from git:  $charm"
     git clone https://github.com/openstack-charmers/charm-$charm github/charm-$charm
   fi
 done
