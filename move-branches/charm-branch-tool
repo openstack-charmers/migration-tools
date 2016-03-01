@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+import argparse
+import sys
+
+
+from prettytable import PrettyTable
+from launchpadlib.launchpad import Launchpad
+from ubuntutools.logger import Logger
+
+if __name__ == '__main__':
+    lp = Launchpad.login_with('charm-bug-tool', 'production')
+    charmers = lp.people['openstack-charmers']
+    charmers_archive = lp.people['openstack-charmers-archive']
+    charms = lp.distributions['charms']
+    branches = charmers.getBranches()
+
+    with open('../charms.txt', 'r') as f:
+        actual_charms = f.read().split()
+
+    for branch in branches:
+        loc = str(branch.bzr_identity)
+        if ((loc.endswith('/next') or loc.startswith("lp:charms")) and
+                branch.sourcepackage.name in actual_charms):
+            print("Moving %s" % loc)
+            # branch.setOwner(charmers_archive)
+        else:
+            print("Skipping %s" % loc)
