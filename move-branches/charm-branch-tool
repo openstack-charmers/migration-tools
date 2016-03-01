@@ -23,6 +23,6 @@ if __name__ == '__main__':
         if ((loc.endswith('/next') or loc.startswith("lp:charms")) and
                 branch.sourcepackage.name in actual_charms):
             print("Moving %s" % loc)
-            # branch.setOwner(charmers_archive)
+            branch.setOwner(new_owner=charmers_archive)
         else:
             print("Skipping %s" % loc)
