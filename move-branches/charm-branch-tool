@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     for branch in branches:
         loc = str(branch.bzr_identity)
-        if ((loc.endswith('/next') or loc.startswith("lp:charms")) and
+        if ((loc.endswith('/next') or loc.startswith("lp:charms") or loc.endswith('/trunk')) and
                 branch.sourcepackage.name in actual_charms):
             print("Moving %s" % loc)
             branch.setOwner(new_owner=charmers_archive)
