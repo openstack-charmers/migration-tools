@@ -17,6 +17,6 @@ for charm in $charms; do
     (cd github/charm-$charm; git pull)
   else
     echo " . Cloning from git:  $charm"
-    git clone https://github.com/openstack-charmers/charm-$charm github/charm-$charm
+    git clone https://github.com/openstack/charm-$charm github/charm-$charm
   fi
 done

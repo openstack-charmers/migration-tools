@@ -49,8 +49,8 @@ bzr fast-import $export_file $bzr_dir
 echo " + Setting bzr repo parent location"
 cd $bzr_dir
 if [ "$stable" == "true" ]; then
-    bzr config parent_location="bzr+ssh://bazaar.launchpad.net/~openstack-charm-sync/charms/trusty/$charm/stable"
+    bzr config parent_location="bzr+ssh://bazaar.launchpad.net/~openstack-charmers/charms/trusty/$charm/trunk"
 else
-    bzr config parent_location="bzr+ssh://bazaar.launchpad.net/~openstack-charm-sync/charms/trusty/$charm/next"
+    bzr config parent_location="bzr+ssh://bazaar.launchpad.net/~openstack-charmers/charms/trusty/$charm/next"
 fi
 bzr config parent_location
