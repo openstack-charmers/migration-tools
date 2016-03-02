@@ -29,13 +29,17 @@ branches_all="$(git branch -a)"
 stable_remote="remotes/origin/stable"
 export_file="$tmp_dir/${charm}.fi"
 
+if [ "$charm" == "swift-proxy" ]; then
+    extra_flags="--full-tree"
+fi
+
 if [ "$stable" == true ] && [[ "$branches_all" == *"$stable_remote"* ]]; then
-    git fast-export remotes/origin/stable > $export_file
+    git fast-export ${extra_flags} remotes/origin/stable > $export_file
 elif [ "$stable" == true ] && [[ "$branches_all" != *"$stable_remote"* ]]; then
     echo " ! Skipping $git_dir (No $stable_remote)"
     exit 0
 else
-    git fast-export master > $export_file
+    git fast-export ${extra_flags} master > $export_file
 fi
 
 echo " . Initializing bzr repo $bzr_dir"

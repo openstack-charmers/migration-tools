@@ -13,10 +13,10 @@ for charm in $charms; do
     continue
   fi
   if [ -d github/charm-$charm ]; then
-    echo " . Pulling from git:  $charm"
+    echo " . Pulling from https://github.com/openstack/charm-$charm"
     (cd github/charm-$charm; git pull)
   else
-    echo " . Cloning from git:  $charm"
+    echo " . Cloning from https://github.com/openstack/charm-$charm"
     git clone https://github.com/openstack/charm-$charm github/charm-$charm
   fi
 done
