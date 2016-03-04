@@ -1,0 +1,50 @@
+#!/usr/bin/python
+
+import argparse
+import sys
+
+
+from prettytable import PrettyTable
+from launchpadlib.launchpad import Launchpad
+from ubuntutools.logger import Logger
+
+SKIP_PRECISE = ['percona-cluster', 'odl-controller']
+SKIP_ALL = ['lxd', 'neutron-api-odl', 'ceph-mon', 'openvswitch-odl', 'cinder-backup', 'rabbitmq-server']
+
+OFFICIAL_BRANCH_POCKET = 'Release'
+OFFICIAL_BRANCH_STATUS = 'Mature'
+
+if __name__ == '__main__':
+    lp = Launchpad.login_with('charm-bug-tool', 'production')
+    charmers = lp.people['openstack-charmers']
+    charmers_archive = lp.people['openstack-charmers-archive']
+    charms = lp.distributions['charms']
+    branches = charmers.getBranches()
+
+    with open('../charms.txt', 'r') as f:
+        actual_charms = f.read().split()
+
+    for series in ['precise', 'trusty']:
+        charm_series = charms.getSeries(name_or_version=series)
+        if charm_series is None:
+            print('Unable to locate series %s' % series)
+            continue
+        for charm in actual_charms:
+            if series == 'precise' and charm in SKIP_PRECISE:
+                print('Skipping %s for precise' % charm)
+                continue
+            if charm in SKIP_ALL:
+                print('Skipping %s for all series' % charm)
+                continue
+
+            charm_branch = lp.branches.getByUrl(url='lp:~openstack-charmers/charms/trusty/%s/trunk' % charm)
+            if charm_branch is None:
+                print('Unable to get charm branch for %s' % charm)
+                continue
+
+            print('Promulgating %s for series %s using %s' % (charm, series, charm_branch.bzr_identity))
+            charm_branch.lifecycle_status = OFFICIAL_BRANCH_STATUS
+            charm_branch.reviewer = charmers
+            charm_branch.lp_save()
+            lp_charm = charm_series.getSourcePackage(name=charm)
+            lp_charm.setBranch(branch=charm_branch, pocket=OFFICIAL_BRANCH_POCKET)
