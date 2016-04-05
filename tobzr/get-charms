@@ -5,7 +5,7 @@ echo "===== $(basename $0) ====="
 charms=$(grep -v '#' ../charms.txt)
 blacklist=$(grep -v '#' blacklist.txt || :)
 
-mkdir -p bzr
+mkdir -p bzr/current/{next,stable}
 
 for charm in $charms; do
   if [[ $blacklist == *$charm* ]]; then
@@ -19,4 +19,10 @@ for charm in $charms; do
     echo " . Cloning from https://github.com/openstack/charm-$charm"
     git clone https://github.com/openstack/charm-$charm github/charm-$charm
   fi
+
+  # get the current bzr branches
+  bzr branch "bzr+ssh://bazaar.launchpad.net/~openstack-charmers/charms/trusty/$charm/trunk" \
+      `pwd`/bzr/current/stable/$branch/$charm
+  bzr branch "bzr+ssh://bazaar.launchpad.net/~openstack-charmers/charms/trusty/$charm/next" \
+      `pwd`/bzr/current/next/$branch/$charm
 done

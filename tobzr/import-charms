@@ -5,7 +5,6 @@ echo "===== $(basename $0) ====="
 charms=$(grep -v '#' ../charms.txt)
 blacklist=$(grep -v '#' blacklist.txt || :)
 
-rm -rf bzr
 mkdir -p bzr/{next,stable}
 
 for charm in $charms; do

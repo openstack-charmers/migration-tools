@@ -3,22 +3,38 @@
 echo "===== $(basename $0) ====="
 
 for charm in `ls -1 bzr/stable/`; do
-    echo " + Pushing $charm stable charm"
-    if [ -d bzr/stable/$charm ]; then
+    if [[ -d bzr/current/stable/$charm && -d bzr/stable/$charm ]]; then
         (
+            cd bzr/current/stable/$charm
+            old_revno=$(bzr revno)
+            cd -
             cd bzr/stable/$charm
-            echo "$(pwd) --> $(bzr config parent_location)"
-            bzr push --overwrite :parent
+            new_revno=$(bzr revno)
+            if [ "$old_revno" != "$new_revno" ]; then
+                echo " + Pushing $charm stable charm"
+                echo "$(pwd) --> $(bzr config parent_location)"
+                bzr push --overwrite :parent
+            else
+                echo " + No change since revno $new_revno, not pushing $charm stable charm"
+            fi
         )
     fi
 done
 for charm in `ls -1 bzr/next/`; do
-    echo " + Pushing $charm next charm"
-    if [ -d bzr/next/$charm ]; then
+    if [[ -d bzr/current/next/$charm && -d bzr/next/$charm ]]; then
         (
+            cd bzr/current/next/$charm
+            old_revno=$(bzr revno)
+            cd -
             cd bzr/next/$charm
-            echo "$(pwd) --> $(bzr config parent_location)"
-            bzr push --overwrite :parent
+            new_revno=$(bzr revno)
+            if [ "$old_revno" != "$new_revno" ]; then
+                echo " + Pushing $charm next charm"
+                echo "$(pwd) --> $(bzr config parent_location)"
+                bzr push --overwrite :parent
+            else
+                echo " + No change since revno $new_revno, not pushing $charm next charm"
+            fi
         )
     fi
 done
