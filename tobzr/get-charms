@@ -22,7 +22,7 @@ for charm in $charms; do
 
   # get the current bzr branches
   bzr branch "bzr+ssh://bazaar.launchpad.net/~openstack-charmers/charms/trusty/$charm/trunk" \
-      `pwd`/bzr/current/stable/$branch/$charm
+      `pwd`/bzr/current/stable/$branch/$charm || true
   bzr branch "bzr+ssh://bazaar.launchpad.net/~openstack-charmers/charms/trusty/$charm/next" \
       `pwd`/bzr/current/next/$branch/$charm
 done
