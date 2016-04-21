@@ -26,7 +26,8 @@ mkdir -p $tmp_dir
 cd $root_dir/$git_dir
 
 branches_all="$(git branch -a)"
-stable_remote="remotes/origin/stable"
+current_stable=$(cat $root_dir/../stable.txt)
+stable_remote="remotes/origin/stable/${current_stable}"
 export_file="$tmp_dir/${charm}.fi"
 
 if [ "$charm" == "swift-proxy" ]; then
@@ -34,7 +35,7 @@ if [ "$charm" == "swift-proxy" ]; then
 fi
 
 if [ "$stable" == true ] && [[ "$branches_all" == *"$stable_remote"* ]]; then
-    git fast-export ${extra_flags} remotes/origin/stable > $export_file
+    git fast-export ${extra_flags} ${stable_remote} > $export_file
 elif [ "$stable" == true ] && [[ "$branches_all" != *"$stable_remote"* ]]; then
     echo " ! Skipping $git_dir (No $stable_remote)"
     exit 0
