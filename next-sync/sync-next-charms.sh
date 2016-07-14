@@ -13,7 +13,7 @@ SCRIPT=$(basename $0)
 
 
 SOURCE_RELEASE=trusty
-TARGET_RELEASES="precise trusty vivid wily xenial"
+TARGET_RELEASES="precise trusty xenial"
 
 CHARMS="
 ceilometer
